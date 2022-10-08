@@ -26,6 +26,6 @@ if __name__ == '__main__':
     parser.add_argument('-o', '--outFolder', type=str, default="/home/jove-temp/images", help='Image export out folder')
     parser.add_argument('-f', '--filePaths', type=str, default="/home/jove-temp/uri.txt", help='Need Image uri paths')
     args = parser.parse_args()
-
-    os.makedirs(args.outFolder)
+    if os.path.exists(args.outFolder) is False:
+        os.makedirs(args.outFolder, exist_ok=False)
     read_image(args.filePaths, args.imageRoot, args.outFolder)
