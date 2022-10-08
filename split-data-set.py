@@ -24,7 +24,7 @@ parser.add_argument('-e', '--test', type=float, default=0.2, help='test set size
 parser.add_argument('-a', '--val', type=float, default=0.1, help='val set size ratio')
 parser.add_argument('-i', '--imagesFolder', type=str, default="blood-cells-label-export/out-images", help='images folder')
 parser.add_argument('-l', '--labelFolder', type=str, default="blood-cells-label-export/out-labels", help='labels folder')
-parser.add_argument('-o', '--outFolder', type=str, default="blood-cells-label-export", help='out folder')
+parser.add_argument('-o', '--outFolder', type=str, default="blood-cells-label-export/data-set", help='out folder')
 args = parser.parse_args()
 train = args.train
 test = args.test
