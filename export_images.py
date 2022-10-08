@@ -15,7 +15,7 @@ def read_image(uri, root, out):
         if len(line) == 0:
             continue
         inFile = root + line
-        arr = line.split("/")
+        arr = line.split("//")
         out = out + "/" + arr[-1:][0]
         shutil.copyfile(inFile, out)
 
