@@ -1,5 +1,7 @@
+import numpy as np
 import pandas as pd
 import os
+
 class_map = {
     5: 0,
     7: 1,
@@ -9,16 +11,38 @@ class_map = {
 }
 
 def transfer_label_class(data: pd.DataFrame) -> pd.DataFrame:
-    data["class_id"] = data["class_id"].replace(class_map)
+    def get_class_code(x):
+        categoryId = x['category_id']
+        classId = x['class_id']
+        if classId is None or classId == '' or pd.isna(classId):
+            classId = 'None'
+        map_key = "{}:{}".format(str(categoryId), str(classId))
+        return class_map.get(map_key)
+
+    data["class_code"] = data.apply(get_class_code, axis=1)
     return data
 
-def save_labels(data: pd.DataFrame)->None:
+def max_min_limit(data: pd.DataFrame) -> pd.DataFrame:
+    def max_min(x):
+        if x < 0 :
+            return 0
+        elif x > 1:
+            return 1
+        else:
+            return x
+    data['coordinate_x'] = data['coordinate_x'].apply(max_min)
+    data['coordinate_y'] = data['coordinate_y'].apply(max_min)
+    data['width'] = data['width'].apply(max_min)
+    data['height'] = data['height'].apply(max_min)
+    return data
+
+def save_labels(label_path,data: pd.DataFrame) -> None:
     grouped = data.groupby('md5')
 
     for name, group in grouped:
-        fileName = "label/labels/{}.txt".format(name)
-        out = group[['class_id', 'coordinate_x', 'coordinate_y', 'width', 'height']]
-        out.to_csv(fileName, encoding='utf-8', header=False, index=False,sep=" " )
+        fileName = label_path + "/{}.txt".format(name)
+        out = group[['class_code', 'coordinate_x', 'coordinate_y', 'width', 'height']]
+        out.to_csv(fileName, encoding='utf-8', header=False, index=False, sep=" ")
 
 def save_all_image_uri(folder, data: pd.DataFrame) -> None:
     uri = data['uri'].unique()
@@ -27,7 +51,8 @@ def save_all_image_uri(folder, data: pd.DataFrame) -> None:
             f.write(item)
             f.write("\n")
 
-def read_label_map(config_path: str)->dict:
+
+def read_label_map(config_path: str) -> dict:
     config = pd.read_csv(config_path, encoding='utf-8')
     result = {}
     for row in config.iterrows():
@@ -35,16 +60,37 @@ def read_label_map(config_path: str)->dict:
         classId = row[1]['class_id']
         className = row[1]['class_name']
         classCode = row[1]['class_code']
-        if className is '-':
+        if className == '-':
             classId = 'None'
         map_key = "{}:{}".format(categoryId, classId)
-        result[map_key] = classCode
+        result[map_key] = str(classCode)
     return result
 
+
 if __name__ == '__main__':
-    labels = pd.read_csv("blood-cells-label-export/react_only_label_202210081652.csv", encoding='utf-8')
-    #labels = transfer_label_class(labels)
-    #save_labels(labels)
-    save_all_image_uri("blood-cells-label-export/out", labels)
-    #config = read_label_map("blood-cells-label-export/label_config_202210081650.csv")
-    pass
+    class_map = read_label_map("blood-cells-label-export/label_config_202210081650.csv")
+
+    labels = pd.read_csv("blood-cells-label-export/react_only_label_202210081652.csv"
+                         , encoding='utf-8'
+                         , dtype={"class_id": str,
+                                  'category_id': str,
+                                  'img_id': str,
+                                  "coordinate_x": np.float64,
+                                  "coordinate_y": np.float64,
+                                  "width": np.float64,
+                                  "height": np.float64,
+                                  "uri": str,
+                                  "md5": str})
+    labels = transfer_label_class(labels)
+    labels = labels.replace(to_replace='None', value=np.nan).dropna()
+    labels = max_min_limit(labels)
+
+    out_label_folder = "blood-cells-label-export/out-labels"
+    if os.path.exists(out_label_folder) is False:
+        os.makedirs(out_label_folder, exist_ok=False)
+    save_labels(out_label_folder, labels)
+
+    out_uri = "blood-cells-label-export/out"
+    if os.path.exists(out_uri) is False:
+        os.makedirs(out_uri, exist_ok=False)
+    save_all_image_uri(out_uri, labels)

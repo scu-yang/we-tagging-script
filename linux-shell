@@ -1,0 +1,2 @@
+# zip 压缩
+zip -9 -r out.zip out
