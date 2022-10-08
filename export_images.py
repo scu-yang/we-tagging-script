@@ -16,8 +16,8 @@ def read_image(uri, root, out):
             continue
         inFile = root + line
         arr = line.split("//")
-        out = out + "/" + arr[-1:][0]
-        shutil.copyfile(inFile, out)
+        out1 = out + "/" + arr[-1:][0]
+        shutil.copyfile(inFile, out1)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
