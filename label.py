@@ -10,6 +10,7 @@ class_map = {
     11: 4
 }
 
+
 def transfer_label_class(data: pd.DataFrame) -> pd.DataFrame:
     def get_class_code(x):
         categoryId = x['category_id']
@@ -22,27 +23,31 @@ def transfer_label_class(data: pd.DataFrame) -> pd.DataFrame:
     data["class_code"] = data.apply(get_class_code, axis=1)
     return data
 
+
 def max_min_limit(data: pd.DataFrame) -> pd.DataFrame:
     def max_min(x):
-        if x < 0 :
+        if x < 0:
             return 0
         elif x > 1:
             return 1
         else:
             return x
+
     data['coordinate_x'] = data['coordinate_x'].apply(max_min)
     data['coordinate_y'] = data['coordinate_y'].apply(max_min)
     data['width'] = data['width'].apply(max_min)
     data['height'] = data['height'].apply(max_min)
     return data
 
-def save_labels(label_path,data: pd.DataFrame) -> None:
+
+def save_labels(label_path, data: pd.DataFrame) -> None:
     grouped = data.groupby('md5')
 
     for name, group in grouped:
         fileName = label_path + "/{}.txt".format(name)
         out = group[['class_code', 'coordinate_x', 'coordinate_y', 'width', 'height']]
         out.to_csv(fileName, encoding='utf-8', header=False, index=False, sep=" ")
+
 
 def save_all_image_uri(folder, data: pd.DataFrame) -> None:
     uri = data['uri'].unique()
@@ -68,9 +73,9 @@ def read_label_map(config_path: str) -> dict:
 
 
 if __name__ == '__main__':
-    class_map = read_label_map("blood-cells-label-export/label_config_202210081650.csv")
+    class_map = read_label_map("organoid-label-export/organoid_config_202210091320.csv")
 
-    labels = pd.read_csv("blood-cells-label-export/react_only_label_202210081652.csv"
+    labels = pd.read_csv("organoid-label-export/organoid_react_only_label_202210091324.csv"
                          , encoding='utf-8'
                          , dtype={"class_id": str,
                                   'category_id': str,
@@ -85,12 +90,12 @@ if __name__ == '__main__':
     labels = labels.replace(to_replace='None', value=np.nan).dropna()
     labels = max_min_limit(labels)
 
-    out_label_folder = "blood-cells-label-export/out-labels"
+    out_label_folder = "organoid-label-export/out-labels"
     if os.path.exists(out_label_folder) is False:
         os.makedirs(out_label_folder, exist_ok=False)
     save_labels(out_label_folder, labels)
 
-    out_uri = "blood-cells-label-export/out"
+    out_uri = "organoid-label-export/out"
     if os.path.exists(out_uri) is False:
         os.makedirs(out_uri, exist_ok=False)
     save_all_image_uri(out_uri, labels)
