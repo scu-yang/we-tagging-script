@@ -11,7 +11,7 @@ class_map = {
 }
 
 
-def transfer_label_class(data: pd.DataFrame) -> pd.DataFrame:
+def transfer_label_class(data: pd.DataFrame, needTransfer=True) -> pd.DataFrame:
     def get_class_code(x):
         categoryId = x['category_id']
         classId = x['class_id']
@@ -19,8 +19,10 @@ def transfer_label_class(data: pd.DataFrame) -> pd.DataFrame:
             classId = 'None'
         map_key = "{}:{}".format(str(categoryId), str(classId))
         return class_map.get(map_key)
-
-    data["class_code"] = data.apply(get_class_code, axis=1)
+    if needTransfer:
+        data["class_code"] = data.apply(get_class_code, axis=1)
+    else:
+        data["class_code"] = 0
     return data
 
 
@@ -75,7 +77,7 @@ def read_label_map(config_path: str) -> dict:
 if __name__ == '__main__':
     class_map = read_label_map("organoid-label-export/organoid_config_202210091320.csv")
 
-    labels = pd.read_csv("organoid-label-export/organoid_react_only_label_202210091324.csv"
+    labels = pd.read_csv("all-version-label-export/all-version-label_202210101523.csv"
                          , encoding='utf-8'
                          , dtype={"class_id": str,
                                   'category_id': str,
@@ -87,15 +89,15 @@ if __name__ == '__main__':
                                   "uri": str,
                                   "md5": str})
     labels = transfer_label_class(labels)
-    labels = labels.replace(to_replace='None', value=np.nan).dropna()
+    # labels = labels.replace(to_replace='None', value=np.nan).dropna()
     labels = max_min_limit(labels)
 
-    out_label_folder = "organoid-label-export/out-labels"
+    out_label_folder = "all-version-label-export/out-labels"
     if os.path.exists(out_label_folder) is False:
         os.makedirs(out_label_folder, exist_ok=False)
     save_labels(out_label_folder, labels)
 
-    out_uri = "organoid-label-export/out"
+    out_uri = "all-version-label-export/out"
     if os.path.exists(out_uri) is False:
         os.makedirs(out_uri, exist_ok=False)
     save_all_image_uri(out_uri, labels)
