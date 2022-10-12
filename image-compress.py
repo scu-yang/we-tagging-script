@@ -106,11 +106,14 @@ def check_image(path: str) -> str:
     return None
 
 
+
 if __name__ == '__main__':
     print(args)
     if type == 'single':
         single_compress_image(inputFolder, outputFolder, rate, gary)
     elif type == 'folder':
+        if os.path.exists(outputFolder) is False:
+            os.makedirs(outputFolder, exist_ok=False)
         folder_compress_image(inputFolder, outputFolder, rate, gary)
     else:
         print("wait update ")

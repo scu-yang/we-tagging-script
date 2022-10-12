@@ -1,2 +1,26 @@
 # zip 压缩
 zip -9 -r out.zip out
+
+# tar 压缩
+tar -zcvf yolov7-tiny.tar yolov7-tiny
+
+# tar 解压
+tar -zxvf /usr/local/test.tar.gz
+
+# 查看目录下文件个数
+ls -l | grep "^-" | wc -l
+
+curl --upload-file ./596k19o6mcp51jk822ak1s7p6t.jpg http://81.70.216.18:4007/596k19o6mcp51jk822ak1s7p6t.jpg
+
+curl --upload-file ./yolov5s-exp28.tar http://81.70.216.18:4007/yolov5s-exp28.tar
+
+# 更改文件可见效
+chmod 777 /目录/ -R
+
+
+# 局域网复制文件
+1、文件复制命令格式：scp local_file remote_username@remote_ip:remote_folder
+2、目录复制命令格式：scp -r local_file remote_username@remote_ip:remote_folder
+
+# 切换python环境
+conda activate yolo
