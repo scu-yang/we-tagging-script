@@ -88,15 +88,23 @@ if __name__ == '__main__':
                                   "height": np.float64,
                                   "uri": str,
                                   "md5": str})
+    # 生成标签编码
     labels = transfer_label_class(labels)
-    #labels = labels.replace(to_replace='None', value=np.nan).dropna()
+    # labels = labels.replace(to_replace='None', value=np.nan).dropna()
+
+    # 限定超出边界值
     labels = max_min_limit(labels)
-    labels.to_csv("blood-cells-label-export/out-label.csv", encoding='utf-8', header=False, index=False, sep=",")
+
+    # 导出处理之后的数据
+    labels.to_csv("blood-cells-label-export/out-label.csv", encoding='utf-8', header=True, index=False, sep=",")
+
+    # 生成当个标签文件
     out_label_folder = "blood-cells-label-export/out-labels"
     if os.path.exists(out_label_folder) is False:
         os.makedirs(out_label_folder, exist_ok=False)
     save_labels(out_label_folder, labels)
 
+    # 生成图片uri文件
     out_uri = "blood-cells-label-export/out"
     if os.path.exists(out_uri) is False:
         os.makedirs(out_uri, exist_ok=False)
