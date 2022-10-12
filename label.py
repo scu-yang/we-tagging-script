@@ -77,7 +77,7 @@ def read_label_map(config_path: str) -> dict:
 if __name__ == '__main__':
     class_map = read_label_map("organoid-label-export/organoid_config_202210091320.csv")
 
-    labels = pd.read_csv("all-version-label-export/all-version-label_202210101523.csv"
+    labels = pd.read_csv("blood-cells-label-export/label_202210130007.csv"
                          , encoding='utf-8'
                          , dtype={"class_id": str,
                                   'category_id': str,
@@ -89,15 +89,16 @@ if __name__ == '__main__':
                                   "uri": str,
                                   "md5": str})
     labels = transfer_label_class(labels)
-    # labels = labels.replace(to_replace='None', value=np.nan).dropna()
+    #labels = labels.replace(to_replace='None', value=np.nan).dropna()
     labels = max_min_limit(labels)
-
-    out_label_folder = "all-version-label-export/out-labels"
+    labels.to_csv("blood-cells-label-export/out-label.csv", encoding='utf-8', header=False, index=False, sep=",")
+    out_label_folder = "blood-cells-label-export/out-labels"
     if os.path.exists(out_label_folder) is False:
         os.makedirs(out_label_folder, exist_ok=False)
     save_labels(out_label_folder, labels)
 
-    out_uri = "all-version-label-export/out"
+    out_uri = "blood-cells-label-export/out"
     if os.path.exists(out_uri) is False:
         os.makedirs(out_uri, exist_ok=False)
     save_all_image_uri(out_uri, labels)
+
