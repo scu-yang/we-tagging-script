@@ -69,10 +69,11 @@ def open_image(imagePath: str, labels: pd.DataFrame):
         endY = min(imgH, int(y * imgH + realH / 2))
         crop = img[startY:endY, startX:endX]
 
+        classFolder = "{}/{}".format(args.outPath, classCode)
+        if os.path.exists(args.classFolder) is False:
+            os.makedirs(args.classFolder, exist_ok=False)
         name = "{}_{}_{}_{}".format(imgId, classCode, x, y)
-        cv2.imwrite(os.path.join(args.outPath, name, '.jpg'), crop)
-        if os.path.exists(args.outPath) is False:
-            os.makedirs(args.outPath, exist_ok=False)
+        cv2.imwrite(classFolder + "/" + name, '.jpg', crop)
         if args.drawSeg:
             ptLeftTop = (startX, startY)
             ptRightBottom = (endX, endY)
@@ -105,8 +106,11 @@ if __name__ == '__main__':
                                   "md5": str,
                                   "class_code": str})
     grouped = labels.groupby('uri')
+    index = 0
     for uri, group in grouped:
         out = group[['img_id', 'class_code', 'coordinate_x', 'coordinate_y', 'width', 'height']]
         imagePath: str = (args.imageRoot + uri).replace(u"//", '/').replace(u"//", '/')
         open_image(imagePath, out)
-        break
+        index+=1
+        if index % 20 == 0:
+            break
