@@ -75,9 +75,9 @@ def read_label_map(config_path: str) -> dict:
 
 
 if __name__ == '__main__':
-    class_map = read_label_map("organoid-label-export/organoid_config_202210091320.csv")
+    class_map = read_label_map("blood-cells-label-export/label_config_202210081650.csv")
 
-    labels = pd.read_csv("blood-cells-label-export/label_202210130007.csv"
+    labels = pd.read_csv("blood-lzj-221017/first-clean.csv"
                          , encoding='utf-8'
                          , dtype={"class_id": str,
                                   'category_id': str,
@@ -87,25 +87,26 @@ if __name__ == '__main__':
                                   "width": np.float64,
                                   "height": np.float64,
                                   "uri": str,
-                                  "md5": str})
+                                  "md5": str,
+                                  "class_code": str})
     # 生成标签编码
-    labels = transfer_label_class(labels)
+    #labels = transfer_label_class(labels)
     # labels = labels.replace(to_replace='None', value=np.nan).dropna()
 
     # 限定超出边界值
-    labels = max_min_limit(labels)
+    #labels = max_min_limit(labels)
 
     # 导出处理之后的数据
-    labels.to_csv("blood-cells-label-export/out-label.csv", encoding='utf-8', header=True, index=False, sep=",")
+    #labels.to_csv("blood-lzj-221017/out-label.csv", encoding='utf-8', header=True, index=False, sep=",")
 
-    # 生成当个标签文件
-    out_label_folder = "blood-cells-label-export/out-labels"
+    # 生成单个标签文件
+    out_label_folder = "blood-lzj-221017/out-labels"
     if os.path.exists(out_label_folder) is False:
         os.makedirs(out_label_folder, exist_ok=False)
     save_labels(out_label_folder, labels)
 
     # 生成图片uri文件
-    out_uri = "blood-cells-label-export/out"
+    out_uri = "blood-lzj-221017/out"
     if os.path.exists(out_uri) is False:
         os.makedirs(out_uri, exist_ok=False)
     save_all_image_uri(out_uri, labels)
