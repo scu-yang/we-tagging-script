@@ -113,4 +113,4 @@ if __name__ == '__main__':
         open_image(imagePath, out)
         index+=1
         if index % 20 == 0:
-            break
+            print("{}-{}", index, grouped.size)
