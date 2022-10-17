@@ -54,7 +54,6 @@ def open_image(imagePath: str, labels: pd.DataFrame):
     imgW = img.shape[1]
     for row in labels.itertuples():
         classCode = getattr(row, 'class_code')
-        print(classCodeMapKeys, classCode)
         if str(classCode) not in classCodeMapKeys:
             continue
         imgId = getattr(row, 'img_id')
@@ -103,7 +102,8 @@ if __name__ == '__main__':
                                   "width": np.float64,
                                   "height": np.float64,
                                   "uri": str,
-                                  "md5": str})
+                                  "md5": str,
+                                  "class_code": str})
     grouped = labels.groupby('uri')
     for uri, group in grouped:
         out = group[['img_id', 'class_code', 'coordinate_x', 'coordinate_y', 'width', 'height']]
