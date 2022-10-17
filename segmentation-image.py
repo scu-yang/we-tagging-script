@@ -68,6 +68,7 @@ def open_image(imagePath: str, labels: pd.DataFrame):
         startY = max(0, int(y * imgH - realH / 2))
         endY = min(imgH, int(y * imgH + realH / 2))
         crop = img[startY:endY, startX:endX]
+        print("crop: {} - {} - {} - {}".format(startY, endY, startX, endX))
         if crop is None or crop.shape == 0:
             print("{} crop: {}-{}-{}-{}".format(imagePath, startY,endY, startX,endX))
             continue
