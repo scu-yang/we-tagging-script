@@ -8,20 +8,39 @@ __version__ = "2022.10.08"
 
 from tqdm import tqdm
 
-
 def version():
     return "version:" + __version__
 
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-v', '--version', action='version', version=version(), help='Display version')
-parser.add_argument('-l', '--labelPath', type=str, default="blood-cells-label-export/out-label.csv", help='Label file path')
+parser.add_argument('-l', '--labelPath', type=str, default="seg-img/out-label.csv",
+                    help='Label file path')
 parser.add_argument('-o', '--outPath', type=str, default="seg-img/out", help='Label file path')
 parser.add_argument('-r', '--imageRoot', type=str, default="/home/image_root/ossRoot/", help='Image root path')
 parser.add_argument('-d', '--drawSeg', type=bool, default=False, help='Label file path')
 parser.add_argument('-s', '--drawSegOut', type=str, default="seg-img/seg-out", help='Label file path')
 
 args = parser.parse_args()
+
+classCodeMap: dict = {
+    "68": '巨（中性）晚幼粒细胞',
+    "67": '巨（中性）杆状核粒细胞',
+    "58": '中性分叶核粒细胞',
+    "92": '成熟淋巴细胞',
+    "2": '中幼红细胞',
+    "3": '晚幼红细胞',
+    "23": "泪滴形红细胞",
+    "139": "巨/大血小板",
+    "59": "嗜酸性中幼粒细胞",
+    "60": "嗜酸性晚幼粒细胞",
+    '63': "嗜碱性中幼粒细胞",
+    '64': '嗜碱性晚幼粒细胞',
+    '4': '成熟红细胞',
+    '38': '红细胞系',
+    '103': '单核细胞'
+}
+classCodeMapKeys = classCodeMap.keys();
 
 
 def open_image(imagePath: str, labels: pd.DataFrame):
@@ -35,6 +54,8 @@ def open_image(imagePath: str, labels: pd.DataFrame):
     imgW = img.shape[1]
     for row in labels.itertuples():
         classCode = getattr(row, 'class_code')
+        if str(classCode) not in classCodeMapKeys:
+            continue
         imgId = getattr(row, 'img_id')
         x = getattr(row, 'coordinate_x')
         y = getattr(row, 'coordinate_y')
