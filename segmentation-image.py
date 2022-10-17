@@ -69,11 +69,11 @@ def open_image(imagePath: str, labels: pd.DataFrame):
         endY = min(imgH, int(y * imgH + realH / 2))
         crop = img[startY:endY, startX:endX]
 
-        classFolder = "{}/{}".format(args.outPath, classCode)
-        if os.path.exists(args.classFolder) is False:
-            os.makedirs(args.classFolder, exist_ok=False)
+        classObjFolder = "{}/{}".format(args.outPath, classCode)
+        if os.path.exists(classObjFolder) is False:
+            os.makedirs(classObjFolder, exist_ok=False)
         name = "{}_{}_{}_{}".format(imgId, classCode, x, y)
-        cv2.imwrite(classFolder + "/" + name, '.jpg', crop)
+        cv2.imwrite(classObjFolder + "/" + name, '.jpg', crop)
         if args.drawSeg:
             ptLeftTop = (startX, startY)
             ptRightBottom = (endX, endY)
