@@ -67,11 +67,13 @@ def open_image(imagePath: str, labels: pd.DataFrame):
         endX = min(imgW, int(x * imgW + realW / 2))
         startY = max(0, int(y * imgH - realH / 2))
         endY = min(imgH, int(y * imgH + realH / 2))
+        if endY - startY <=1 or endX-startX<=1:
+            continue
         crop = img[startY:endY, startX:endX]
-        print("crop: {} - {} - {} - {}".format(startY, endY, startX, endX))
         if crop is None or crop.shape == 0:
             print("{} crop: {}-{}-{}-{}".format(imagePath, startY,endY, startX,endX))
             continue
+
         classObjFolder = "{}/{}".format(args.outPath, classCode)
         if os.path.exists(classObjFolder) is False:
             os.makedirs(classObjFolder, exist_ok=False)
