@@ -19,6 +19,9 @@ def read_image(uri, root, out):
         out1 = out + "/" + arr[-1:][0]
         shutil.copyfile(inFile, out1)
 
+"""
+python export_images.py -f  /home/loorr/we-tagging-script/blood-label-221105/out/uri.txt -o /home/loorr/we-tagging-script/blood-label-221105/out-images
+"""
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-v', '--version', action='version', version=version(), help='Display version')
