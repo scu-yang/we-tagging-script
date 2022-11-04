@@ -6,16 +6,13 @@ import os
 
 __version__ = "2022.10.08"
 
-from tqdm import tqdm
-
 def version():
     return "version:" + __version__
 
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-v', '--version', action='version', version=version(), help='Display version')
-parser.add_argument('-l', '--labelPath', type=str, default="seg-img/out-label.csv",
-                    help='Label file path')
+parser.add_argument('-l', '--labelPath', type=str, default="seg-img/out-label.csv", help='Label file path')
 parser.add_argument('-o', '--outPath', type=str, default="seg-img/out", help='Label file path')
 parser.add_argument('-r', '--imageRoot', type=str, default="/home/image_root/ossRoot/", help='Image root path')
 parser.add_argument('-d', '--drawSeg', type=bool, default=False, help='Label file path')
@@ -26,6 +23,8 @@ args = parser.parse_args()
 classCodeMap: dict = {
     "68": '巨（中性）晚幼粒细胞',
     "67": '巨（中性）杆状核粒细胞',
+    "56": "中性晚幼粒细胞",
+    "57": "中性杆状核粒细胞",
     "58": '中性分叶核粒细胞',
     "92": '成熟淋巴细胞',
     "2": '中幼红细胞',
@@ -38,8 +37,10 @@ classCodeMap: dict = {
     '64': '嗜碱性晚幼粒细胞',
     '4': '成熟红细胞',
     '38': '红细胞系',
-    '103': '单核细胞'
+    '103': '单核细胞',
+    "23":'泪滴形红细胞'
 }
+
 classCodeMapKeys = classCodeMap.keys();
 
 
