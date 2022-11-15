@@ -7,4 +7,12 @@ python label.py -c organoid-label-export/organoid_config_202210091320.csv \
 -l organoid-label-export-221115/out-labels
 
 
+python export_images.py -o organoid-label-export-221115/out-images \
+-f organoid-label-export-221115/out-uri/uri.txt
 
+python split-data-set.py -l organoid-label-export-221115/out-labels \
+-i organoid-label-export-221115/out-images \
+-o organoid-label-export-221115/data-set
+
+cd organoid-label-export-221115
+zip -9 -r out.zip data-set
