@@ -24,3 +24,6 @@ chmod 777 /目录/ -R
 
 # 切换python环境
 conda activate yolo
+
+
+chmod +x 脚本
