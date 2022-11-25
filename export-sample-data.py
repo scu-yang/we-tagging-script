@@ -25,7 +25,7 @@ def main(inputFolder, outputFolder):
         subPath = os.path.join(folder, sub)
         outSubPath = os.path.join(outFolder, sub)
         if os.path.exists(outSubPath) is False:
-            os.makedirs(outSubPath, exist_ok=False)
+            os.makedirs(outSubPath)
         index = 0
         for file in os.listdir(subPath):
             outFile = os.path.join(outSubPath, file)
