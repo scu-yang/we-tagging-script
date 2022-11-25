@@ -1,13 +1,8 @@
 # !/usr/bin/env python
 # encoding: utf-8
 import argparse
-import pathlib
-
-import cv2
 import shutil
-import math
 import os
-import numpy as np
 
 def version():
     return "version:" + __version__
