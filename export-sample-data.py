@@ -40,7 +40,7 @@ def main(inputFolder, outputFolder):
                 break
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    inputFolder = parser.inputFolder
-    outputFolder = parser.outputFolder
+    args = parser.parse_args()
+    inputFolder =  args.inputFolder
+    outputFolder =  args.outputFolder
     main(inputFolder, outputFolder)
