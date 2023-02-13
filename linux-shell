@@ -25,5 +25,14 @@ chmod 777 /目录/ -R
 # 切换python环境
 conda activate yolo
 
-
 chmod +x 脚本
+
+nohup python3 train.py --workers 8 --device 0 --batch-size 32 --data /home/pengdie/loorr-temp/20230212-data-set-1/data.yaml \
+ --img 640 640 --cfg cfg/training/yolov7-data-set-1.yaml --weights '' --name yolov7-data-set-1 --hyp data/hyp.scratch.p5.yaml \
+> yolov7-data-set-1.yaml 2>&1 &
+
+
+nohup python3 train.py --epochs 500 --batch-size 48 \
+--data /home/pengdie/loorr-temp/20230212-data-set-1/data.yaml \
+--cfg models/yolov5s-data-set-1.yaml --name yolov5s-data-set-1 \
+>  logs/yolov5-data-set-1.txt 2>&1 &
