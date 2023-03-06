@@ -64,7 +64,7 @@ def transfer_label_class(data, needTransfer=True):
             classId = 'None'
         map_key = "{}:{}".format(str(categoryId), str(classId))
         # return class_map.get(map_key)
-        return class_map.get(classId)
+        return class_map.get(int(classId))
     if needTransfer:
         data["class_code"] = data.apply(get_class_code, axis=1)
     else:
@@ -144,7 +144,7 @@ if __name__ == '__main__':
     outUriFolder = args.outUriFolder
 
 
-    class_map = read_label_map(labelConfigPath)
+    # class_map = read_label_map(labelConfigPath)
     labels = pd.read_csv(labelDataPath
                          , encoding='utf-8'
                          , dtype={"class_id": str,
