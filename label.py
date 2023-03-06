@@ -63,7 +63,8 @@ def transfer_label_class(data, needTransfer=True):
         if classId is None or classId == '' or pd.isna(classId):
             classId = 'None'
         map_key = "{}:{}".format(str(categoryId), str(classId))
-        return class_map.get(map_key)
+        # return class_map.get(map_key)
+        return class_map.get(classId)
     if needTransfer:
         data["class_code"] = data.apply(get_class_code, axis=1)
     else:
