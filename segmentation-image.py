@@ -122,7 +122,7 @@ if __name__ == '__main__':
     grouped = labels.groupby('uri')
     index = 0
     for uri, group in grouped:
-        out = group[['img_id', 'class_code', 'coordinate_x', 'coordinate_y', 'width', 'height']]
+        out = group[['img_id', 'class_id', 'coordinate_x', 'coordinate_y', 'width', 'height']]
         imagePath: str = (args.imageRoot + uri).replace(u"//", '/').replace(u"//", '/')
         open_image(imagePath, out)
         index+=1
