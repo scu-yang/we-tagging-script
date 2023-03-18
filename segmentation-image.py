@@ -3,6 +3,7 @@ import cv2
 import numpy as np
 import pandas as pd
 import os
+import concurrent.futures
 
 __version__ = "2022.10.08"
 
@@ -61,8 +62,8 @@ def open_image(imagePath: str, labels: pd.DataFrame):
     imgW = img.shape[1]
     for row in labels.itertuples():
         classCode = getattr(row, 'class_id')
-        if str(classCode) not in classCodeMapKeys:
-            continue
+        #if str(classCode) not in classCodeMapKeys:
+        #    continue
         imgId = getattr(row, 'img_id')
         x = getattr(row, 'coordinate_x')
         y = getattr(row, 'coordinate_y')
@@ -121,10 +122,16 @@ if __name__ == '__main__':
                          )
     grouped = labels.groupby('uri')
     index = 0
-    for uri, group in grouped:
-        out = group[['img_id', 'class_id', 'coordinate_x', 'coordinate_y', 'width', 'height']]
-        imagePath: str = (args.imageRoot + uri).replace(u"//", '/').replace(u"//", '/')
-        open_image(imagePath, out)
-        index+=1
-        if index % 20 == 0:
-            print("{}-{}", index, grouped.size)
+
+    with concurrent.futures.ProcessPoolExecutor(max_workers=os.cpu_count()) as executor:
+        futures = []
+        for uri, group in grouped:
+            out = group[['img_id', 'class_id', 'coordinate_x', 'coordinate_y', 'width', 'height']]
+            imagePath: str = (args.imageRoot + uri).replace(u"//", '/').replace(u"//", '/')
+            # open_image(imagePath, out)
+            futures.append(executor.submit(open_image, imagePath, out))
+            index += 1
+            if index % 20 == 0:
+                print("{}-{}", index, grouped.size)
+        concurrent.futures.wait(futures)
+
