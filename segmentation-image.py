@@ -50,6 +50,22 @@ classCodeMap: dict = {
 
 classCodeMapKeys = classCodeMap.keys();
 
+id_to_code = {
+    "35": "2",
+    "36": "3",
+    "37": "4",
+    "1": "53",
+    "3": "55",
+    "4": "56",
+    "5": "57",
+    "6": "58",
+    "8": "60",
+    "76": "92",
+    "82": "103",
+    "100": "110",
+    "87": "141"
+}
+
 
 def open_image(imagePath: str, labels: pd.DataFrame):
     img = cv2.imread(imagePath)
@@ -61,9 +77,14 @@ def open_image(imagePath: str, labels: pd.DataFrame):
     imgH = img.shape[0]
     imgW = img.shape[1]
     for row in labels.itertuples():
-        classCode = getattr(row, 'class_id')
+        classId = getattr(row, 'class_id')
+        classCode = id_to_code[str(classId)]
         #if str(classCode) not in classCodeMapKeys:
         #    continue
+        if classCode is None:
+            print("not found class code", row)
+            continue
+
         imgId = getattr(row, 'img_id')
         x = getattr(row, 'coordinate_x')
         y = getattr(row, 'coordinate_y')
