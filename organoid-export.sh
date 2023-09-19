@@ -1,7 +1,7 @@
 #!/bin/bash
 
-rootFolder=organoid-label-export-230910
-labelName=sma
+rootFolder=organoid-label-export-230919
+labelName=label
 filePofix=.csv
 fileFullName=${labelName}${filePofix}
 
